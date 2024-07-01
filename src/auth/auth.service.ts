@@ -50,8 +50,12 @@ export class AuthService {
       throw new UnauthorizedException('Wrong credentials');
     }
     const payload = { username: user.username, sub: user._id };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1d' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 
@@ -87,5 +91,29 @@ export class AuthService {
     }
     user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
+  }
+
+  async refresh(refreshToken: string): Promise<any> {
+    try {
+      const payload = this.jwtService.verify(refreshToken);
+      const user = await this.usersService.findById(payload.sub);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+      const newPayload = { username: user.username, sub: user._id };
+      const newAccessToken = this.jwtService.sign(newPayload, {
+        expiresIn: '1d',
+      });
+      const newRefreshToken = this.jwtService.sign(newPayload, {
+        expiresIn: '7d',
+      });
+
+      return {
+        access_token: newAccessToken,
+        refresh_token: newRefreshToken,
+      };
+    } catch (e) {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
   }
 }

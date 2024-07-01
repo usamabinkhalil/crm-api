@@ -1,8 +1,22 @@
 // auth/auth.controller.ts
-import { Controller, Post, Body, Get, Param, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Patch,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { UserDto, LoginDto, ForgotPasswordDto } from 'src/users/dto/users.dto';
+import {
+  UserDto,
+  LoginDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from 'src/users/dto/users.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -26,14 +40,38 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Successfully logged in.',
-    schema: { example: { access_token: 'jwt-token' } },
+    schema: {
+      example: {
+        access_token: 'jwt-token',
+        refresh_token: 'jwt-refresh-token',
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiBody({ type: LoginDto })
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   async login(@Body() body: LoginDto) {
     const { username, password } = body;
     return this.authService.login(username, password);
+  }
+
+  @ApiOperation({ summary: 'Refresh token' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tokens refreshed successfully.',
+    schema: {
+      example: {
+        access_token: 'jwt-token',
+        refresh_token: 'jwt-refresh-token',
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Body('refresh_token') refreshToken: string) {
+    return this.authService.refresh(refreshToken);
   }
 
   @ApiOperation({ summary: 'Verify user email' })
@@ -56,7 +94,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Reset password' })
   @ApiResponse({ status: 200, description: 'Password reset successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid token.' })
-  @ApiBody({ type: UserDto })
+  @ApiBody({ type: ResetPasswordDto })
   @Patch('reset-password/:token')
   async resetPassword(
     @Param('token') token: string,

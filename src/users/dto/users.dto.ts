@@ -62,3 +62,12 @@ export class ForgotPasswordDto {
   @IsNotEmpty()
   readonly email: string;
 }
+
+export class ResetPasswordDto {
+  @ApiProperty({
+    example: 'password123',
+    description: 'The password of the user',
+  })
+  @IsNotEmpty()
+  readonly newPassword: string;
+}

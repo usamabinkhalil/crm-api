@@ -18,9 +18,9 @@ async function bootstrap() {
     .setTitle('Visitor Management System')
     .setDescription('API documentation for the Visitor Management System')
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('auth')
     .addTag('users')
-    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
