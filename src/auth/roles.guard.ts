@@ -69,6 +69,8 @@ export class RolesGuard implements CanActivate {
     const userPermissions = await this.rolesService.getRolePermissions(
       user.role,
     );
+    console.log(requiredPermissions);
+    console.log(userPermissions);
 
     return requiredPermissions.every((permission) =>
       userPermissions.some(

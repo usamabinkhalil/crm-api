@@ -1,53 +1,58 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from './../schemas/user.schema';
-import { UserDto } from './dto/users.dto';
+import { User } from '../schemas/user.schema';
+import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+  ) {}
 
-  async create(UserDto: UserDto): Promise<User> {
-    const createdUser = new this.userModel(UserDto);
-    return createdUser.save();
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const newUser = new this.userModel(createUserDto);
+    return newUser.save();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().populate('roles').exec();
+  async getUsers(): Promise<User[]> {
+    return this.userModel.find().exec();
   }
 
-  async findOne(username: string): Promise<User> {
-    return this.userModel.findOne({ username }).populate('roles').exec();
-  }
-
-  async findById(id: string): Promise<User> {
-    const user = await this.userModel.findById(id).populate('roles').exec();
+  async getUserById(id: string): Promise<User> {
+    const user = await this.userModel.findById(id).exec();
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID "${id}" not found`);
     }
     return user;
   }
 
-  async findByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email }).exec();
-  }
-
-  async update(id: string, UserDto: UserDto): Promise<User> {
-    const updatedUser = await this.userModel
-      .findByIdAndUpdate(id, UserDto, { new: true })
-      .populate('roles')
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const existingUser = await this.userModel
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
       .exec();
-    if (!updatedUser) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+    if (!existingUser) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
     }
-    return updatedUser;
+    return existingUser;
   }
 
-  async delete(id: string): Promise<User> {
+  async findOne(query: any): Promise<User> {
+    const user = await this.userModel.findOne(query).exec();
+    if (!user) {
+      throw new NotFoundException('User not found with given query');
+    }
+    return user;
+  }
+
+  async findAll(query: any): Promise<User[]> {
+    return this.userModel.find(query).exec();
+  }
+
+  async deleteUser(id: string): Promise<User> {
     const deletedUser = await this.userModel.findByIdAndDelete(id).exec();
     if (!deletedUser) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID "${id}" not found`);
     }
     return deletedUser;
   }

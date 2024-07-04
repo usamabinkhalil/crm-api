@@ -22,7 +22,7 @@ export class RolesService {
     const role = await this.roleModel
       .findOne({ name: roleName })
       .populate('permissions');
-    return role.permissions;
+    return role?.permissions || [];
   }
 
   async getRoles(): Promise<Role[]> {

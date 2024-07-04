@@ -1,17 +1,26 @@
-// users/users.controller.ts
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { RolesGuard } from '../auth/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  ApiBody,
   ApiBearerAuth,
+  // ApiBody,
+  ApiParam,
 } from '@nestjs/swagger';
-import { UserDto } from 'src/users/dto/users.dto';
-import { Permissions } from 'src/auth/permissions.decorator';
+import { UsersService } from './users.service';
+import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { Permissions } from '../auth/permissions.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -26,19 +35,54 @@ export class UsersController {
     description: 'The user has been successfully created.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @ApiBody({ type: UserDto })
-  @Post()
   @Permissions('create:user')
-  async create(@Body() UserDto: UserDto) {
-    return this.usersService.create(UserDto);
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.createUser(createUserDto);
   }
 
   @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'Successfully retrieved users.' })
+  @ApiResponse({ status: 200, description: 'Return all users.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @Permissions('read:users')
   @Get()
-  @Permissions('read:user')
   async findAll() {
-    return this.usersService.findAll();
+    return this.usersService.getUsers();
+  }
+
+  @ApiOperation({ summary: 'Get a user by id' })
+  @ApiResponse({ status: 200, description: 'Return the user.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiParam({ name: 'id', description: 'The ID of the user' })
+  @Permissions('read:user')
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.usersService.getUserById(id);
+  }
+
+  @ApiOperation({ summary: 'Update a user by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully updated.',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiParam({ name: 'id', description: 'The ID of the user' })
+  @Permissions('update:user')
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateUser(id, updateUserDto);
+  }
+
+  @ApiOperation({ summary: 'Delete a user by id' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been successfully deleted.',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiParam({ name: 'id', description: 'The ID of the user' })
+  @Permissions('delete:user')
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.usersService.deleteUser(id);
   }
 }

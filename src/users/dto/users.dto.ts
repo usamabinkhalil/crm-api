@@ -1,13 +1,14 @@
-import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsArray,
+  IsString,
   IsEmail,
   IsNotEmpty,
-  IsOptional,
-  IsString,
+  IsBoolean,
+  IsArray,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Types } from 'mongoose';
 
-export class UserDto {
+export class CreateUserDto {
   @ApiProperty({ example: 'john_doe', description: 'The username of the user' })
   @IsString()
   @IsNotEmpty()
@@ -30,44 +31,60 @@ export class UserDto {
   readonly email: string;
 
   @ApiProperty({
-    example: ['admin'],
-    description: 'The roles of the user',
+    example: false,
+    description: 'Email verification status of the user',
     required: false,
   })
-  @IsOptional()
+  @IsBoolean()
+  readonly emailVerified?: boolean;
+
+  @ApiProperty({
+    example: ['604c8b2f9b1f8a35f8bda7f2'],
+    description: 'Array of role IDs',
+    required: false,
+  })
   @IsArray()
-  @IsString({ each: true })
-  readonly roles?: string[];
+  readonly roles?: Types.ObjectId[];
 }
 
-export class LoginDto {
-  @ApiProperty({ example: 'john_doe', description: 'The username of the user' })
-  @IsNotEmpty()
-  readonly username: string;
+export class UpdateUserDto {
+  @ApiProperty({
+    example: 'john_doe',
+    description: 'The username of the user',
+    required: false,
+  })
+  @IsString()
+  readonly username?: string;
 
   @ApiProperty({
     example: 'password123',
     description: 'The password of the user',
+    required: false,
   })
-  @IsNotEmpty()
-  readonly password: string;
-}
+  @IsString()
+  readonly password?: string;
 
-export class ForgotPasswordDto {
   @ApiProperty({
     example: 'john.doe@example.com',
     description: 'The email of the user',
+    required: false,
   })
   @IsEmail()
-  @IsNotEmpty()
-  readonly email: string;
-}
+  readonly email?: string;
 
-export class ResetPasswordDto {
   @ApiProperty({
-    example: 'password123',
-    description: 'The password of the user',
+    example: false,
+    description: 'Email verification status of the user',
+    required: false,
   })
-  @IsNotEmpty()
-  readonly newPassword: string;
+  @IsBoolean()
+  readonly emailVerified?: boolean;
+
+  @ApiProperty({
+    example: ['604c8b2f9b1f8a35f8bda7f2'],
+    description: 'Array of role IDs',
+    required: false,
+  })
+  @IsArray()
+  readonly roles?: Types.ObjectId[];
 }

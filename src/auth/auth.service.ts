@@ -24,7 +24,7 @@ export class AuthService {
     email: string,
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await this.usersService.create({
+    const user = await this.usersService.createUser({
       username,
       password: hashedPassword,
       email,
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   async login(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
+    const user = await this.usersService.findOne({ username });
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
@@ -61,7 +61,7 @@ export class AuthService {
 
   async verifyEmail(token: string): Promise<void> {
     const payload = this.jwtService.verify(token);
-    const user = await this.usersService.findById(payload.userId);
+    const user = await this.usersService.getUserById(payload.userId);
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   async forgotPassword(email: string): Promise<void> {
-    const user = await this.usersService.findByEmail(email);
+    const user = await this.usersService.findOne({ email });
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
@@ -85,7 +85,7 @@ export class AuthService {
 
   async resetPassword(token: string, newPassword: string): Promise<void> {
     const payload = this.jwtService.verify(token);
-    const user = await this.usersService.findById(payload.userId);
+    const user = await this.usersService.getUserById(payload.userId);
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
@@ -96,7 +96,7 @@ export class AuthService {
   async refresh(refreshToken: string): Promise<any> {
     try {
       const payload = this.jwtService.verify(refreshToken);
-      const user = await this.usersService.findById(payload.sub);
+      const user = await this.usersService.getUserById(payload.sub);
       if (!user) {
         throw new NotFoundException('User not found');
       }

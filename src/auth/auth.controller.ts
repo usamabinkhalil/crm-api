@@ -16,7 +16,7 @@ import {
   LoginDto,
   ForgotPasswordDto,
   ResetPasswordDto,
-} from 'src/users/dto/users.dto';
+} from 'src/auth/dto/auth.dto';
 
 @ApiTags('auth')
 @Controller('auth')
