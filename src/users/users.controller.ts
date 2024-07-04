@@ -2,7 +2,6 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import {
   ApiTags,
@@ -12,6 +11,7 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserDto } from 'src/users/dto/users.dto';
+import { Permissions } from 'src/auth/permissions.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -28,7 +28,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiBody({ type: UserDto })
   @Post()
-  @Roles('admin')
+  @Permissions('create:user')
   async create(@Body() UserDto: UserDto) {
     return this.usersService.create(UserDto);
   }
@@ -37,7 +37,7 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Successfully retrieved users.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Get()
-  @Roles('admin')
+  @Permissions('read:user')
   async findAll() {
     return this.usersService.findAll();
   }

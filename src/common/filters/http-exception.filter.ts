@@ -1,35 +1,29 @@
-// common/filters/http-exception.filter.ts
 import {
   ExceptionFilter,
   Catch,
   ArgumentsHost,
   HttpException,
-  BadRequestException,
-  UnauthorizedException,
-  NotFoundException,
+  HttpStatus,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
-@Catch(HttpException)
+@Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-    const status = exception.getStatus();
-
-    const responseMessage =
-      exception instanceof BadRequestException ||
-      exception instanceof UnauthorizedException ||
-      exception instanceof NotFoundException
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const rData: any =
+      exception instanceof HttpException
         ? exception.getResponse()
         : {
             statusCode: status,
-            message: exception.message,
-            timestamp: new Date().toISOString(),
-            path: request.url,
+            message: 'Internal server error',
           };
-
-    response.status(status).json(responseMessage);
+    rData.timestamp = new Date().toISOString();
+    response.status(status).json(rData);
   }
 }
