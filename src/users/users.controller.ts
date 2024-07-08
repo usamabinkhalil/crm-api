@@ -20,7 +20,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto/users.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles.guard';
-import { Permissions } from '../auth/permissions.decorator';
+import { Permissions } from '../permissions/permissions.decorator';
 
 @ApiTags('users')
 @Controller('users')

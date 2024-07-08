@@ -9,9 +9,9 @@ import { UsersService } from '../users/users.service';
 import { EmailService } from '../email/email.service';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/schemas/user.schema';
-
 @Injectable()
 export class AuthService {
+  private readonly permissions: Set<string> = new Set();
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,

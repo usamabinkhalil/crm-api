@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Permission } from './permission.schema';
 
 @Schema()
 export class Role extends Document {
@@ -8,7 +7,7 @@ export class Role extends Document {
   name: string;
 
   @Prop({ type: [{ type: String, ref: 'Permission' }] })
-  permissions: Permission[];
+  permissions: string[];
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);

@@ -20,7 +20,7 @@ import { RolesService } from './roles.service';
 import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/roles.guard';
-import { Permissions } from 'src/auth/permissions.decorator';
+import { Permissions } from '../permissions/permissions.decorator';
 
 @ApiTags('roles')
 @Controller('roles')
