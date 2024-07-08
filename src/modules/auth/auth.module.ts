@@ -4,10 +4,10 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './jwt.strategy';
-import { EmailModule } from 'src/email/email.module';
+import { EmailModule } from 'src/modules/email/email.module';
 import { AuthController } from './auth.controller';
 import { RolesGuard } from './roles.guard';
-import { RolesModule } from 'src/roles/roles.module';
+import { RolesModule } from 'src/modules/roles/roles.module';
 
 @Module({
   imports: [

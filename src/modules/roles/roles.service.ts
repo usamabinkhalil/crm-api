@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { Role } from '../schemas/role.schema';
+import { Role } from '../../schemas/role.schema';
 import { CreateRoleDto, UpdateRoleDto } from './dto/role.dto';
 import { indexOf } from 'lodash';
-import { PermissionsService } from 'src/permissions/permissions.service';
+import { PermissionsService } from 'src/modules/permissions/permissions.service';
 
 @Injectable()
 export class RolesService {

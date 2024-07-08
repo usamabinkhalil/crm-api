@@ -3,9 +3,9 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RolesService } from './roles.service';
 import { RolesController } from './roles.controller';
-import { Role, RoleSchema } from '../schemas/role.schema';
-import { Permission, PermissionSchema } from '../schemas/permission.schema';
-import { PermissionsModule } from 'src/permissions/permissions.module';
+import { Role, RoleSchema } from '../../schemas/role.schema';
+import { Permission, PermissionSchema } from '../../schemas/permission.schema';
+import { PermissionsModule } from 'src/modules/permissions/permissions.module';
 
 @Module({
   imports: [
