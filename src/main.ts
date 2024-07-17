@@ -9,6 +9,13 @@ import helmet from 'helmet';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: ['http://localhost:3000'], // Replace with your frontend URLs
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Accept, Authorization',
+  });
+
   // Rate limiting
   app.use(
     rateLimit({
@@ -39,6 +46,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(3000);
+  await app.listen(3010);
 }
 bootstrap();

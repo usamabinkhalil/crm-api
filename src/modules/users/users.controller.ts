@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -48,6 +49,15 @@ export class UsersController {
   @Get()
   async findAll() {
     return this.usersService.getUsers();
+  }
+
+  @ApiOperation({ summary: 'Get Login user' })
+  @ApiResponse({ status: 200, description: 'Return the user.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @Permissions('read:user')
+  @Get('me')
+  async loginUser(@Request() req: any) {
+    return { user: req.user };
   }
 
   @ApiOperation({ summary: 'Get a user by id' })

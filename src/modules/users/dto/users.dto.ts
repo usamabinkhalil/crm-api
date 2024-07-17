@@ -9,6 +9,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Types } from 'mongoose';
 
 export class CreateUserDto {
+  @ApiProperty({ example: 'Dohn Doe', description: 'The name of the user' })
+  @IsString()
+  @IsNotEmpty()
+  readonly fullname: string;
+
   @ApiProperty({ example: 'john_doe', description: 'The username of the user' })
   @IsString()
   @IsNotEmpty()
@@ -48,6 +53,15 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto {
+  @ApiProperty({
+    example: 'Dohn Doe',
+    description: 'The name of the user',
+    required: false,
+  })
+  @IsString()
+  @IsNotEmpty()
+  readonly fullname?: string;
+
   @ApiProperty({
     example: 'john_doe',
     description: 'The username of the user',

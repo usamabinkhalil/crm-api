@@ -19,12 +19,14 @@ export class AuthService {
   ) {}
 
   async signup(
+    fullname: string,
     username: string,
     password: string,
     email: string,
   ): Promise<User> {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.usersService.createUser({
+      fullname,
       username,
       password: hashedPassword,
       email,
@@ -42,7 +44,9 @@ export class AuthService {
   }
 
   async login(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne({ username });
+    const user = await this.usersService.findOne({
+      $or: [{ username }, { email: username }],
+    });
     if (!user) {
       throw new NotFoundException(`User not found`);
     }
@@ -56,6 +60,7 @@ export class AuthService {
     return {
       access_token: accessToken,
       refresh_token: refreshToken,
+      user,
     };
   }
 

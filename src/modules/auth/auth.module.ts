@@ -8,6 +8,7 @@ import { EmailModule } from 'src/modules/email/email.module';
 import { AuthController } from './auth.controller';
 import { RolesGuard } from './roles.guard';
 import { RolesModule } from 'src/modules/roles/roles.module';
+import { GoogleCalendarService } from './google-calendar.service';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { RolesModule } from 'src/modules/roles/roles.module';
     UsersModule,
     RolesModule,
   ],
-  providers: [AuthService, JwtStrategy, RolesGuard],
+  providers: [AuthService, JwtStrategy, RolesGuard, GoogleCalendarService],
   controllers: [AuthController],
   exports: [AuthService],
 })

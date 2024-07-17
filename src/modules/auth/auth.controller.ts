@@ -8,6 +8,8 @@ import {
   Patch,
   HttpCode,
   HttpStatus,
+  Redirect,
+  Query,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
@@ -17,11 +19,15 @@ import {
   ForgotPasswordDto,
   ResetPasswordDto,
 } from 'src/modules/auth/dto/auth.dto';
+import { GoogleCalendarService } from './google-calendar.service';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly googleCalendarService: GoogleCalendarService,
+  ) {}
 
   @ApiOperation({ summary: 'Sign up a new user' })
   @ApiResponse({
@@ -32,8 +38,8 @@ export class AuthController {
   @ApiBody({ type: UserDto })
   @Post('signup')
   async signup(@Body() UserDto: UserDto) {
-    const { username, password, email } = UserDto;
-    return this.authService.signup(username, password, email);
+    const { fullname, username, password, email } = UserDto;
+    return this.authService.signup(fullname, username, password, email);
   }
 
   @ApiOperation({ summary: 'Log in a user' })
@@ -101,5 +107,19 @@ export class AuthController {
     @Body('newPassword') newPassword: string,
   ) {
     return this.authService.resetPassword(token, newPassword);
+  }
+
+  @Get('google')
+  @Redirect()
+  getAuthUrl() {
+    const url = this.googleCalendarService.getAuthUrl();
+    return { url };
+  }
+
+  @Get('google/callback')
+  async googleCallback(@Query('code') code: string) {
+    const tokens = await this.googleCalendarService.getTokens(code);
+    // Save tokens to user session or database
+    return tokens;
   }
 }
