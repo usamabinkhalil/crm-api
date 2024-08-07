@@ -40,7 +40,7 @@ export class UsersService {
   async findOne(query: any): Promise<User> {
     const user = await this.userModel.findOne(query).exec();
     if (!user) {
-      throw new NotFoundException('User not found with given query');
+      throw new NotFoundException('User not found');
     }
     return user;
   }

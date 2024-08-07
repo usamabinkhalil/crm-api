@@ -35,6 +35,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new HttpExceptionFilter());
+  app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('Visitor Management System')
     .setDescription('API documentation for the Visitor Management System')
@@ -45,7 +46,7 @@ async function bootstrap() {
     .addTag('roles')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-  await app.listen(3010);
+  SwaggerModule.setup('app-docs', app, document);
+  await app.listen(3001);
 }
 bootstrap();
