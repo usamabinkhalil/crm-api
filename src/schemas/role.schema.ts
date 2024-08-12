@@ -1,8 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { BaseSchema } from './base.schema';
 
 @Schema()
-export class Role extends Document {
+export class Role extends BaseSchema {
   @Prop({ required: true, unique: true })
   name: string;
 
@@ -11,3 +11,8 @@ export class Role extends Document {
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);
+
+RoleSchema.pre('save', async function (next) {
+  this.updatedAt = new Date();
+  next();
+});
