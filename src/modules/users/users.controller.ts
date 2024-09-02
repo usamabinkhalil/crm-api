@@ -46,9 +46,10 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'Return all users.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Permissions('read:users')
-  @Get()
-  async findAll() {
-    return this.usersService.getUsers();
+  @Post('all')
+  async findAll(@Body() body: any) {
+    const { page = 1, limit = 10, ...query } = body;
+    return this.usersService.getUsers(query, page, limit);
   }
 
   @ApiOperation({ summary: 'Get Login user' })

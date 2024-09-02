@@ -1,6 +1,8 @@
 // src/schemas/base.schema.ts
 import { Prop, Schema } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
+import { User } from './user.schema';
 
 @Schema()
 export class BaseSchema extends Document {
@@ -10,9 +12,9 @@ export class BaseSchema extends Document {
   @Prop({ default: Date.now })
   updatedAt: Date;
 
-  @Prop({ type: { type: Types.ObjectId, ref: 'User' } })
-  createdBy: Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  createdBy: User;
 
-  @Prop({ type: { type: Types.ObjectId, ref: 'User' } })
-  updatedBy: Types.ObjectId;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  updatedBy: User;
 }

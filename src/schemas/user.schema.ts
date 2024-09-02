@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Types } from 'mongoose';
 import { BaseSchema } from './base.schema';
 import * as bcrypt from 'bcrypt';
+import * as mongoose from 'mongoose';
+import { Role } from './role.schema';
 
 @Schema()
 export class User extends BaseSchema {
@@ -9,22 +10,24 @@ export class User extends BaseSchema {
   fullname: string;
 
   @Prop({ required: true, unique: true })
+  email: string;
+
+  @Prop({ required: true })
   username: string;
 
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true, unique: true })
-  email: string;
-
   @Prop({ default: false })
   emailVerified: boolean;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Role' }] })
-  roles: Types.ObjectId[];
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }] })
+  roles: Role[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.index({ fullname: 'text', email: 'text' });
 
 UserSchema.pre('save', async function (next) {
   this.updatedAt = new Date();

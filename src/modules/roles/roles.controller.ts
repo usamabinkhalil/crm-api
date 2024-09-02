@@ -12,7 +12,6 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  ApiBody,
   ApiParam,
   ApiBearerAuth,
 } from '@nestjs/swagger';
@@ -45,9 +44,10 @@ export class RolesController {
   @ApiResponse({ status: 200, description: 'Return all roles.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Permissions('read:roles')
-  @Get()
-  async findAll() {
-    return this.rolesService.getRoles();
+  @Post('all')
+  async findAll(@Body() body: any) {
+    const { page = 1, limit = 10, ...query } = body;
+    return this.rolesService.getRoles(query, page, limit);
   }
 
   @ApiOperation({ summary: 'Get a role by id' })
@@ -86,20 +86,20 @@ export class RolesController {
     return this.rolesService.deleteRole(id);
   }
 
-  @ApiOperation({ summary: 'Add a permission to a role' })
-  @ApiResponse({
-    status: 200,
-    description: 'The permission has been successfully added.',
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @ApiParam({ name: 'id', description: 'The ID of the role' })
-  @ApiBody({ schema: { example: { permission: 'read' } } })
-  @Permissions('update:role')
-  @Post(':id/permissions')
-  async addPermission(
-    @Param('id') id: string,
-    @Body('permission') permission: string,
-  ) {
-    return this.rolesService.addPermissionToRole(id, permission);
-  }
+  // @ApiOperation({ summary: 'Add a permission to a role' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The permission has been successfully added.',
+  // })
+  // @ApiResponse({ status: 403, description: 'Forbidden.' })
+  // @ApiParam({ name: 'id', description: 'The ID of the role' })
+  // @ApiBody({ schema: { example: { permission: 'read' } } })
+  // @Permissions('update:role')
+  // @Post(':id/permissions')
+  // async addPermission(
+  //   @Param('id') id: string,
+  //   @Body('permission') permission: string,
+  // ) {
+  //   return this.rolesService.addPermissionToRole(id, permission);
+  // }
 }

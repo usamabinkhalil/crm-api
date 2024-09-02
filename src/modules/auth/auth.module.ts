@@ -9,6 +9,9 @@ import { AuthController } from './auth.controller';
 import { RolesGuard } from './roles.guard';
 import { RolesModule } from 'src/modules/roles/roles.module';
 import { GoogleCalendarService } from './google-calendar.service';
+import { AssistantModule } from '../assistant/assistant.module';
+import { CallLogsModule } from '../call-logs/call-logs.module';
+import { RealTimeBookingsModule } from '../real-time-bookings/real-time-bookings.module';
 
 @Module({
   imports: [
@@ -19,7 +22,10 @@ import { GoogleCalendarService } from './google-calendar.service';
     EmailModule,
     PassportModule,
     UsersModule,
+    AssistantModule,
+    CallLogsModule,
     RolesModule,
+    RealTimeBookingsModule,
   ],
   providers: [AuthService, JwtStrategy, RolesGuard, GoogleCalendarService],
   controllers: [AuthController],

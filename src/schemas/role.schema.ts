@@ -6,8 +6,11 @@ export class Role extends BaseSchema {
   @Prop({ required: true, unique: true })
   name: string;
 
-  @Prop({ type: [{ type: String, ref: 'Permission' }] })
-  permissions: string[];
+  @Prop({
+    type: Object,
+    of: [String],
+  })
+  permissions: { [controller: string]: string[] };
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);

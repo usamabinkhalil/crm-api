@@ -37,7 +37,7 @@ export class AuthService {
     await this.emailService.sendMail(
       email,
       'Email Verification',
-      `Please verify your email by clicking the following link: http://localhost:3000/auth/verify/${token}`,
+      `Please verify your email by clicking the following link: http://localhost:3000/api/auth/verify/${token}`,
     );
 
     return user;
@@ -84,7 +84,7 @@ export class AuthService {
     await this.emailService.sendMail(
       email,
       'Password Reset',
-      `Please reset your password by clicking the following link: http://localhost:3000/auth/reset-password/${token}`,
+      `Please reset your password by clicking the following link: http://localhost:3000/api/auth/reset-password/${token}`,
     );
   }
 

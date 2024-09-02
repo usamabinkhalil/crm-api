@@ -1,4 +1,4 @@
-import { IsString, IsArray } from 'class-validator';
+import { IsString, IsOptional, IsObject } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRoleDto {
@@ -7,11 +7,18 @@ export class CreateRoleDto {
   readonly name: string;
 
   @ApiProperty({
-    example: ['create:user', 'read:user'],
-    description: 'Permissions for the role',
+    example: {
+      UsersController: ['create:user', 'read:user'],
+      RolesController: ['create:role', 'read:role'],
+    },
+    description: 'Permissions for the role, organized by controller',
+    type: Object,
+    additionalProperties: { type: 'array', items: { type: 'string' } },
   })
-  @IsArray()
-  readonly permissions: string[];
+  @IsObject()
+  readonly permissions: {
+    [controller: string]: string[];
+  };
 }
 
 export class UpdateRoleDto {
@@ -20,14 +27,23 @@ export class UpdateRoleDto {
     description: 'The name of the role',
     required: false,
   })
+  @IsOptional()
   @IsString()
   readonly name?: string;
 
   @ApiProperty({
-    example: ['create:user', 'read:user'],
-    description: 'Permissions for the role',
+    example: {
+      UsersController: ['create:user', 'read:user'],
+      RolesController: ['create:role', 'read:role'],
+    },
+    description: 'Permissions for the role, organized by controller',
+    type: Object,
+    additionalProperties: { type: 'array', items: { type: 'string' } },
     required: false,
   })
-  @IsArray()
-  readonly permissions?: string[];
+  @IsOptional()
+  @IsObject()
+  readonly permissions?: {
+    [controller: string]: string[];
+  };
 }

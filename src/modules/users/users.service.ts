@@ -15,8 +15,22 @@ export class UsersService {
     return newUser.save();
   }
 
-  async getUsers(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async getUsers(query: any, page: number = 1, limit: number = 10) {
+    const skip = (page - 1) * limit;
+    const total = await this.userModel.countDocuments(query);
+    const users = await this.userModel
+      .find(query)
+      .skip(skip)
+      .limit(limit)
+      .populate('roles')
+      .exec();
+
+    return {
+      total,
+      page,
+      limit,
+      data: users,
+    };
   }
 
   async getUserById(id: string): Promise<User> {
