@@ -4,10 +4,10 @@ import {
   Post,
   Body,
   Param,
-  Put,
   Delete,
   UseGuards,
   Request,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -79,7 +79,7 @@ export class UsersController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiParam({ name: 'id', description: 'The ID of the user' })
   @Permissions('update:user')
-  @Put(':id')
+  @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.updateUser(id, updateUserDto);
   }

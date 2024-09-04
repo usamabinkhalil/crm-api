@@ -4,9 +4,9 @@ import {
   Post,
   Body,
   Param,
-  Put,
   Delete,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -68,7 +68,7 @@ export class RolesController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiParam({ name: 'id', description: 'The ID of the role' })
   @Permissions('update:role')
-  @Put(':id')
+  @Patch(':id')
   async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     return this.rolesService.updateRole(id, updateRoleDto);
   }

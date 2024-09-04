@@ -34,7 +34,7 @@ export class UsersService {
   }
 
   async getUserById(id: string): Promise<User> {
-    const user = await this.userModel.findById(id).exec();
+    const user = await this.userModel.findById(id).populate('roles').exec();
     if (!user) {
       throw new NotFoundException(`User with ID "${id}" not found`);
     }
@@ -44,6 +44,7 @@ export class UsersService {
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const existingUser = await this.userModel
       .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .populate('roles')
       .exec();
     if (!existingUser) {
       throw new NotFoundException(`User with ID "${id}" not found`);

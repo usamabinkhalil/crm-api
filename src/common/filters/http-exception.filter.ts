@@ -29,7 +29,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
-      message = exception.message || exception.getResponse();
+      message = exception.getResponse() || exception.message;
     } else if (exception instanceof Error) {
       status = HttpStatus.BAD_REQUEST;
       message = exception.message;

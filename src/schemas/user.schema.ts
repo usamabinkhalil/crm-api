@@ -21,6 +21,9 @@ export class User extends BaseSchema {
   @Prop({ default: false })
   emailVerified: boolean;
 
+  @Prop({ default: false })
+  systemAdmin: boolean;
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }] })
   roles: Role[];
 }
